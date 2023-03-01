@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   node0:
@@ -57,12 +57,66 @@ services:
       localnet:
         ipv4_address: 192.167.10.5
 
+  node4:
+    container_name: node4
+    image: "tendermint/localnode"
+    ports:
+      - "26665-26666:26656-26657"
+    environment:
+      - ID=4
+      - LOG=${LOG:-tendermint.log}
+    volumes:
+      - ./build:/tendermint:Z
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.6
+
+  node5:
+    container_name: node5
+    image: "tendermint/localnode"
+    ports:
+      - "26667-26668:26656-26657"
+    environment:
+      - ID=5
+      - LOG=${LOG:-tendermint.log}
+    volumes:
+      - ./build:/tendermint:Z
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.7
+
+  node6:
+    container_name: node6
+    image: "tendermint/localnode"
+    environment:
+      - ID=6
+      - LOG=${LOG:-tendermint.log}
+    ports:
+      - "26669-26670:26656-26657"
+    volumes:
+      - ./build:/tendermint:Z
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.8
+
+  node7:
+    container_name: node7
+    image: "tendermint/localnode"
+    environment:
+      - ID=7
+      - LOG=${LOG:-tendermint.log}
+    ports:
+      - "26671-26672:26656-26657"
+    volumes:
+      - ./build:/tendermint:Z
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.9
+
 networks:
   localnet:
     driver: bridge
     ipam:
       driver: default
       config:
-      -
-        subnet: 192.167.10.0/16
-
+        - subnet: 192.167.10.0/16
