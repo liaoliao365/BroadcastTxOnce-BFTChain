@@ -21,7 +21,6 @@ services:
     image: "tendermint/localnode"
     ports:
       - "26659-26660:26656-26657"
-      - "30001:30000"
     environment:
       - ID=1
       - LOG=${LOG:-tendermint.log}
@@ -39,7 +38,6 @@ services:
       - LOG=${LOG:-tendermint.log}
     ports:
       - "26661-26662:26656-26657"
-      - "30002:30000"
     volumes:
       - ./build:/tendermint:Z
     networks:
@@ -54,7 +52,6 @@ services:
       - LOG=${LOG:-tendermint.log}
     ports:
       - "26663-26664:26656-26657"
-      - "30003:30000"
     volumes:
       - ./build:/tendermint:Z
     networks:

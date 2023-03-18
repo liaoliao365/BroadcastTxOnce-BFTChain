@@ -19,12 +19,16 @@ import (
 	"github.com/tendermint/tendermint/p2p"
 	"github.com/tendermint/tendermint/proxy"
 	"github.com/tendermint/tendermint/types"
+	// "net/http"
+	// _ "net/http/pprof"
+	// "github.com/felixge/fgprof"
 )
 
 // TxKeySize is the size of the transaction key index
 const TxKeySize = sha256.Size
 
 var newline = []byte("\n")
+var listenTag = false
 
 //--------------------------------------------------------------------------------
 
@@ -227,11 +231,21 @@ func (mem *CListMempool) TxsWaitChan() <-chan struct{} {
 
 // It blocks if we're waiting on Update() or Reap().
 // cb: A callback from the CheckTx command.
-//     It gets called from another goroutine.
+//
+//	It gets called from another goroutine.
+//
 // CONTRACT: Either cb will get called, or err returned.
 //
 // Safe for concurrent use by multiple goroutines.
 func (mem *CListMempool) CheckTx(tx types.Tx, cb func(*abci.Response), txInfo TxInfo) error {
+	// http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+	// if mem.config.RootDir == "/tendermint/node0" && !listenTag {
+	// 	listenTag = true
+	// 	go func() {
+	// 		fmt.Println(http.ListenAndServe(":30000", nil))
+	// 	}()
+	// }
+
 	mem.updateMtx.RLock()
 	// use defer to unlock mutex because application (*local client*) might panic
 	defer mem.updateMtx.RUnlock()
@@ -346,7 +360,7 @@ func (mem *CListMempool) reqResCb(
 }
 
 // Called from:
-//  - resCbFirstTime (lock not held) if tx is valid
+//   - resCbFirstTime (lock not held) if tx is valid
 func (mem *CListMempool) addTx(memTx *mempoolTx) {
 	e := mem.txs.PushBack(memTx)
 	mem.txsMap.Store(TxKey(memTx.tx), e)
@@ -355,8 +369,8 @@ func (mem *CListMempool) addTx(memTx *mempoolTx) {
 }
 
 // Called from:
-//  - Update (lock held) if tx was committed
-// 	- resCbRecheck (lock not held) if tx was invalidated
+//   - Update (lock held) if tx was committed
+//   - resCbRecheck (lock not held) if tx was invalidated
 func (mem *CListMempool) removeTx(tx types.Tx, elem *clist.CElement, removeFromCache bool) {
 	mem.txs.Remove(elem)
 	elem.DetachPrev()

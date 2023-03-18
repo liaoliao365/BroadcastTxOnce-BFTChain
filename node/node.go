@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/felixge/fgprof"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
@@ -89,6 +90,7 @@ type Provider func(*cfg.Config, log.Logger) (*Node, error)
 // PrivValidator, ClientCreator, GenesisDoc, and DBProvider.
 // It implements NodeProvider.
 func DefaultNewNode(config *cfg.Config, logger log.Logger) (*Node, error) {
+
 	nodeKey, err := p2p.LoadOrGenNodeKey(config.NodeKeyFile())
 	if err != nil {
 		return nil, fmt.Errorf("failed to load or gen node key %s: %w", config.NodeKeyFile(), err)
@@ -137,12 +139,12 @@ type fastSyncReactor interface {
 // WARNING: using any name from the below list of the existing reactors will
 // result in replacing it with the custom one.
 //
-//  - MEMPOOL
-//  - BLOCKCHAIN
-//  - CONSENSUS
-//  - EVIDENCE
-//  - PEX
-//  - STATESYNC
+//   - MEMPOOL
+//   - BLOCKCHAIN
+//   - CONSENSUS
+//   - EVIDENCE
+//   - PEX
+//   - STATESYNC
 func CustomReactors(reactors map[string]p2p.Reactor) Option {
 	return func(n *Node) {
 		for name, reactor := range reactors {
@@ -654,6 +656,16 @@ func NewNode(config *cfg.Config,
 	logger log.Logger,
 	options ...Option) (*Node, error) {
 
+	if config.RPC.PprofListenAddress != "" {
+		logger.Info("eeeeeeeeeeeeeeeeee", config.RPC.PprofListenAddress)
+		http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+		go func() {
+			// logger.Info("Starting pprof server", "laddr", config.RPC.PprofListenAddress)
+			logger.Info("Starting pprof/fgprof no (sigVerif)server", "laddr", config.RPC.PprofListenAddress)
+			logger.Error("pprof server error", "err", http.ListenAndServe(config.RPC.PprofListenAddress, nil))
+		}()
+	}
+
 	blockStore, stateDB, err := initDBs(config, dbProvider)
 	if err != nil {
 		return nil, err
@@ -827,13 +839,6 @@ func NewNode(config *cfg.Config,
 	var pexReactor *pex.Reactor
 	if config.P2P.PexReactor {
 		pexReactor = createPEXReactorAndAddToSwitch(addrBook, config, sw, logger)
-	}
-
-	if config.RPC.PprofListenAddress != "" {
-		go func() {
-			logger.Info("Starting pprof server", "laddr", config.RPC.PprofListenAddress)
-			logger.Error("pprof server error", "err", http.ListenAndServe(config.RPC.PprofListenAddress, nil))
-		}()
 	}
 
 	node := &Node{

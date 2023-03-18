@@ -31,6 +31,10 @@ func init() {
 // EnsureRoot creates the root, config, and data directories if they don't exist,
 // and panics if it fails.
 func EnsureRoot(rootDir string) {
+	fmt.Println("rootDir = ", rootDir)
+	if rootDir == "/tendermint/node0" {
+		fmt.Println("hhhhhhhhhhhhhhhhhhh")
+	}
 	if err := tmos.EnsureDir(rootDir, DefaultDirPerm); err != nil {
 		panic(err.Error())
 	}
