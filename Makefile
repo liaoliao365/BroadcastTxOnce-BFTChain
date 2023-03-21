@@ -2,6 +2,7 @@ PACKAGES=$(shell go list ./...)
 OUTPUT?=build/tendermint
 
 BUILD_TAGS?=tendermint
+# BUILD_TAGS?=cleveldb
 
 # If building a release, please checkout the version tag to get the correct version setting
 ifneq ($(shell git symbolic-ref -q --short HEAD),)
@@ -67,7 +68,7 @@ build:
 .PHONY: build
 
 build-clevel:
-	CGO_LDFLAGS="-lsnappy" CGO_ENABLED=$(CGO_ENABLED) go build $(BUILD_FLAGS) -tags '$(BUILD_TAGS)' -o $(OUTPUT) ./cmd/tendermint/
+	CGO_CFLAGS=$(CGO_CFLAGS) CGO_LDFLAGS=$(CGO_LDFLAGS) CGO_ENABLED=$(CGO_ENABLED) go build $(BUILD_FLAGS) -tags '$(BUILD_TAGS)' -o $(OUTPUT) ./cmd/tendermint/
 .PHONY: build-clevel
 
 install:
