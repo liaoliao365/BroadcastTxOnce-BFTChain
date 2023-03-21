@@ -1,5 +1,33 @@
 [rpc]
 laddr = "tcp://0.0.0.0:26657"
 
-[mempool]
-size = 10000
+
+# [consensus]
+# skip_timeout_commit = true
+
+# [consensus]
+# create_empty_blocks = false
+
+# [mempool]
+# recheck = false
+
+# [mempool]
+# size = 10000
+# cache_size = 20000
+
+# [mempool]
+# size = 20000
+# cache_size = 40000
+
+# [mempool]
+# size = 30000
+# cache_size = 60000
+
+# [mempool]
+# size = 40000
+# cache_size = 80000
+
+# [mempool]
+# size = 50000
+# cache_size = 100000
+
