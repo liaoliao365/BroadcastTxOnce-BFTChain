@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/felixge/fgprof"
+	// "github.com/felixge/fgprof"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
@@ -657,10 +657,8 @@ func NewNode(config *cfg.Config,
 	options ...Option) (*Node, error) {
 
 	if config.RPC.PprofListenAddress != "" {
-		logger.Info("eeeeeeeeeeeeeeeeee", config.RPC.PprofListenAddress)
-		http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+		// http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
 		go func() {
-			// logger.Info("Starting pprof server", "laddr", config.RPC.PprofListenAddress)
 			logger.Info("Starting pprof/fgprof no (sigVerif)server", "laddr", config.RPC.PprofListenAddress)
 			logger.Error("pprof server error", "err", http.ListenAndServe(config.RPC.PprofListenAddress, nil))
 		}()
