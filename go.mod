@@ -10,7 +10,6 @@ require (
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/confio/ics23/go v0.6.3
 	github.com/cosmos/iavl v0.15.3
-	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/fortytw2/leaktest v1.3.0
 	github.com/go-kit/kit v0.10.0
 	github.com/go-logfmt/logfmt v0.5.0
@@ -19,8 +18,7 @@ require (
 	github.com/google/orderedcode v0.0.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/gtank/merlin v0.1.1
-	github.com/jmhodges/levigo v1.0.0 // indirect
-	github.com/libp2p/go-buffer-pool v0.0.2
+	github.com/libp2p/go-buffer-pool v0.1.0
 	github.com/minio/highwayhash v1.0.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.8.0
@@ -34,5 +32,6 @@ require (
 	github.com/tendermint/tm-db v0.6.4
 	golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974
+	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
 	google.golang.org/grpc v1.37.0
 )
